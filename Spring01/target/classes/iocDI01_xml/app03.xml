@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<!-- 1) 고전적 방법 (직접 new) -->
+	<bean class="iocDI01_xml.SsTVs" id="tvs" lazy-init="true"/>	
+	
+	
+	<!-- 2) IOC/DI -> 생성자 주입 
+		   => 매개변수 1개, 2개 모두 Test
+		   => 인자의 종류(type, 개수)에 따라 일치하는 생성자가 호출 됨
+		   => index(0, 1, 2...), name(생성자 매개변수명) 속성을 적용하면
+		      더욱 정확하게 매칭 가능함 -->
+	<bean class="iocDI01_xml.LgTVs" id="tvl" lazy-init="true">
+		<!-- <constructor-arg> => 생성자에 매개변수 있는 것(초기화 생성자) 처리하는 태그 -->
+		<constructor-arg index="0" value="Yellow"/>
+		<constructor-arg name="price" value="12345000"/>
+		<constructor-arg index="2" ref="sp"/> <!-- ref="참조형" -->
+	</bean>
+	
+	<!-- constructor-arg의 참조형을 꼭 생성해야 함(위, 아래 순서는 관계 없음) -->
+	<bean class="iocDI01_xml.Speaker" id="sp" lazy-init="true"/>
+	
+	
+	<!-- 3) IOC/DI -> setter 주입 
+		   => setter 메서드는 <bean> 생성 직후 컨테이너가 자동 호출
+		   => 매개변수 1개, 2개 모두 Test 
+		   => setter 찾는 규칙 (setPrice)
+		      name에 지정된 값으로 setter메서드명 -->
+	<bean class="iocDI01_xml.AiTVs" id="tva" lazy-init="true">
+		<!-- <property> => setter메서드 찾는 태그 -->
+		<property name="speaker" ref="sp"/>
+		<property name="color" value="Silver"/>
+		<property name="price" value="55667700"/>
+	</bean>
+
+</beans>
